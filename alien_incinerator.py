@@ -26,6 +26,7 @@ class AlienIncinerator:
         """Start the game loop"""
         while True:
             self._check_events()
+            self.dragon.update()
             self._update_screen()
             
     def _check_events(self):
@@ -33,7 +34,18 @@ class AlienIncinerator:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-    
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    self.dragon.moving_right = True
+                elif event.key == pygame.K_LEFT:
+                    self.dragon.moving_left = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    self.dragon.moving_right = False
+                elif event.key == pygame.K_LEFT:
+                    self.dragon.moving_left = False
+                    
+                    
     def _update_screen(self):
         """Update the screen"""
         self.screen.blit(self.bg_img, (0, 0))

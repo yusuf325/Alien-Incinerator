@@ -16,6 +16,17 @@ class Dragon:
         # Set dragon location to bottom middle
         self.rect.midbottom = self.screen_rect.midbottom
         
+        # Movement flags
+        self.moving_right = False
+        self.moving_left = False
+        
     def blit_me(self):
         """Draw the dragon at its rect"""
         self.screen.blit(self.img, self.rect)        
+        
+    def update(self):
+        """Update dragon position according to movement flags"""
+        if self.moving_right:
+            self.rect.x += 3
+        elif self.moving_left:
+            self.rect.x -= 3
