@@ -24,19 +24,23 @@ class AlienIncinerator:
                 
     def run_game(self):
         """Start the game loop"""
-        i = 0
-
         while True:
-            # Wait for events
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
+            self._check_events()
+            self._update_screen()
             
-            # Update the screen
-            self.screen.blit(self.bg_img, (0, 0))
-            self.dragon.blitme()
-            pygame.display.flip()
-            
+    def _check_events(self):
+        """Wait for events"""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+    
+    def _update_screen(self):
+        """Update the screen"""
+        self.screen.blit(self.bg_img, (0, 0))
+        self.dragon.blit_me()
+        
+        pygame.display.flip()
+                    
 if __name__ == "__main__":
     # Instantiate game and run
     game = AlienIncinerator()
