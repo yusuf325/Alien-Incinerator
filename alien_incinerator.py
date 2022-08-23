@@ -2,20 +2,22 @@ import sys
 
 import pygame
 
+from settings import Settings
+
 class AlienIncinerator:
-    """Main class to manage game settings"""
+    """Main class to manage game"""
     
     def __init__(self):
         """Initialise game attributes"""
         pygame.init()
         
-        self.width, self.height = 1200, 800
-        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.settings = Settings()
+        
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Incinerator")
 
-        #self.bg_colour = (82, 139, 167)
         self.bg_img = pygame.image.load(r"images\background.jpg")
-        self.bg_img = pygame.transform.scale(self.bg_img,(self.width, self.height))
+        self.bg_img = pygame.transform.scale(self.bg_img,(self.settings.screen_width, self.settings.screen_height))
                 
     def run_game(self):
         """Start the game loop"""
@@ -28,7 +30,6 @@ class AlienIncinerator:
                     sys.exit()
             
             # Update the screen
-             #self.screen.fill(self.bg_colour)
             self.screen.blit(self.bg_img, (0, 0))
             pygame.display.flip()
             
