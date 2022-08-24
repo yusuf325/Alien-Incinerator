@@ -10,11 +10,13 @@ class Fireball(Sprite):
         self.screen = game.screen
         self.settings = game.settings
         
+        # Load fireball image and set position at dragon
         self.img = pygame.image.load(r"images\fireball.png")
         self.img = pygame.transform.scale(self.img, (30, 50))
         self.rect = self.img.get_rect()
+        self.rect.midtop = game.dragon.rect.midtop
         
-        self.rect.midbottom = game.dragon.rect.midtop
+        # Allign position
         self.rect.x -= 3
         self.rect.y += 8
         

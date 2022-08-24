@@ -26,7 +26,7 @@ class AlienIncinerator:
         pygame.display.set_caption("Alien Incinerator")
 
         self.dragon = Dragon(self)
-        self.fireball = Fireball(self)
+        self.fireballs = pygame.sprite.Group()
         
         self.bg_img = pygame.image.load(r"images\background.jpg")
         self.bg_img = pygame.transform.scale(self.bg_img,(self.settings.screen_width, self.settings.screen_height))
@@ -36,6 +36,7 @@ class AlienIncinerator:
         while True:
             self._check_events()
             self.dragon.update()
+            self.fireballs.update()
             self._update_screen()
             
     def _check_events(self):
@@ -56,6 +57,8 @@ class AlienIncinerator:
             self.dragon.moving_left = True
         elif event.key == pygame.K_q:
             sys.exit()
+        elif event.key == pygame.K_SPACE:
+            self._shoot_fireball()
             
     def _check_keyup(self, event):
         "Respond to key releases"
@@ -63,13 +66,19 @@ class AlienIncinerator:
             self.dragon.moving_right = False
         elif event.key == pygame.K_LEFT:
             self.dragon.moving_left = False
-            
+    
+    def _shoot_fireball(self):
+        """Create new fireball and add to fireball group"""
+        new_fireball = Fireball(self)
+        self.fireballs.add(new_fireball)
+        
     def _update_screen(self):
         """Update the screen"""
         self.screen.blit(self.bg_img, (0, 0))
         self.dragon.draw_dragon()
-        #self.fireball.draw_fireball()
-        
+        for fireball in self.fireballs.sprites():
+            fireball.draw_fireball()      
+            
         pygame.display.flip()
                     
 if __name__ == "__main__":
