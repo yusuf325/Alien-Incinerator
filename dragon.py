@@ -26,16 +26,16 @@ class Dragon:
         
     def update(self):
         """Update dragon position according to movement flags"""
-        # Update dragon's x value, not the rect
+        # Update dragon's decimal x value, not the rect
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.x += self.settings.dragon_speed
         if self.moving_left and self.rect.left > self.screen_rect.left:
             self.x -= self.settings.dragon_speed
             
-        # Update rect from self.x    
+        # Update rect position from self.x    
         self.rect.x = self.x
     
-    def blit_me(self):
+    def draw_dragon(self):
         """Draw the dragon at its rect"""
         self.screen.blit(self.img, self.rect)        
         

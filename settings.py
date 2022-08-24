@@ -9,3 +9,7 @@ class Settings:
         
         # Dragon settings
         self.dragon_speed = 3.5
+        
+        # Fireball settings
+        self.fireball_speed = 1.5
+        

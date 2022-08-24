@@ -4,6 +4,7 @@ import pygame
 
 from settings import Settings
 from dragon import Dragon
+from fireball import Fireball
 
 class AlienIncinerator:
     """Main class to manage game"""
@@ -25,6 +26,7 @@ class AlienIncinerator:
         pygame.display.set_caption("Alien Incinerator")
 
         self.dragon = Dragon(self)
+        self.fireball = Fireball(self)
         
         self.bg_img = pygame.image.load(r"images\background.jpg")
         self.bg_img = pygame.transform.scale(self.bg_img,(self.settings.screen_width, self.settings.screen_height))
@@ -65,7 +67,8 @@ class AlienIncinerator:
     def _update_screen(self):
         """Update the screen"""
         self.screen.blit(self.bg_img, (0, 0))
-        self.dragon.blit_me()
+        self.dragon.draw_dragon()
+        #self.fireball.draw_fireball()
         
         pygame.display.flip()
                     
