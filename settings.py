@@ -12,4 +12,4 @@ class Settings:
         
         # Fireball settings
         self.fireball_speed = 1.5
-        
+        self.fireballs_allowed = 5

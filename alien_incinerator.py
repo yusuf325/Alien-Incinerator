@@ -36,7 +36,7 @@ class AlienIncinerator:
         while True:
             self._check_events()
             self.dragon.update()
-            self.fireballs.update()
+            self._update_fireballs()
             self._update_screen()
             
     def _check_events(self):
@@ -68,10 +68,21 @@ class AlienIncinerator:
             self.dragon.moving_left = False
     
     def _shoot_fireball(self):
-        """Create new fireball and add to fireball group"""
-        new_fireball = Fireball(self)
-        self.fireballs.add(new_fireball)
+        """Create new fireball and add to fireballs group"""
+        if len(self.fireballs) < self.settings.fireballs_allowed:
+            new_fireball = Fireball(self)
+            self.fireballs.add(new_fireball)
+    
+    def _update_fireballs(self):
+        """Update position of fireballs and delete old fireballs"""
+        # Update fireball positions
+        self.fireballs.update()
         
+        # Delete fireballs that have gone off screen
+        for fireball in self.fireballs.copy():
+            if fireball.rect.bottom <= 0:
+                self.fireballs.remove(fireball)
+                
     def _update_screen(self):
         """Update the screen"""
         self.screen.blit(self.bg_img, (0, 0))
