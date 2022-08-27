@@ -18,6 +18,7 @@ class AlienIncinerator:
         
         # Windowed mode
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+        self.screen_rect = self.screen.get_rect()
         
         # Fullscreen mode 
         """self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
@@ -96,9 +97,25 @@ class AlienIncinerator:
     def _update_aliens(self, i):
         """Release alien and update alien positions"""
         # Release a new alien at a certain rate
-        if i % self.settings.bullet_rate == 0:
+        if i % self.settings.fireball_rate == 0:
             self._release_alien()
         self.aliens.update()
+        
+        # Remove aliens that have gone off screen
+        for alien in self.aliens.copy():
+            if alien.rect.top >= self.settings.screen_height:
+                self.aliens.remove(alien)
+        
+        # Removes all aliens and restarts ship
+        """if pygame.sprite.spritecollideany(self.dragon, self.aliens):
+            self.aliens.empty()
+            self.dragon = Dragon(self)
+            print("Ship hit!!!")"""
+        # Just removes the alien
+        """collider = pygame.sprite.spritecollideany(self.dragon, self.aliens)
+        if collider:
+            self.aliens.remove(collider)
+            print("Ship hit")"""
         
     def _release_alien(self):
         """Create new alien and add to aliens group"""

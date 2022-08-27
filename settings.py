@@ -8,7 +8,7 @@ class Settings:
         self.screen_height = 800
 
         # General settings
-        self.bullet_rate = 100
+        self.fireball_rate = 200
         
         # Dragon settings
         self.dragon_speed = 3.5
@@ -18,4 +18,4 @@ class Settings:
         self.fireballs_allowed = 5
         
         # Alien settings
-        self.alien_speed = 0.2
+        self.alien_speed = 0.5
