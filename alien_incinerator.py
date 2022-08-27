@@ -5,6 +5,7 @@ import pygame
 from settings import Settings
 from dragon import Dragon
 from fireball import Fireball
+from alien import Alien
 
 class AlienIncinerator:
     """Main class to manage game"""
@@ -25,19 +26,25 @@ class AlienIncinerator:
         
         pygame.display.set_caption("Alien Incinerator")
 
+        # Instantiate game entities
         self.dragon = Dragon(self)
         self.fireballs = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
         
+        # Load and resize background iamge
         self.bg_img = pygame.image.load(r"images\background.jpg")
         self.bg_img = pygame.transform.scale(self.bg_img,(self.settings.screen_width, self.settings.screen_height))
                 
     def run_game(self):
         """Start the game loop"""
+        i = 0
         while True:
             self._check_events()
             self.dragon.update()
             self._update_fireballs()
+            self._update_aliens(i)
             self._update_screen()
+            i += 1 
             
     def _check_events(self):
         """Wait for events"""
@@ -83,13 +90,32 @@ class AlienIncinerator:
             if fireball.rect.bottom <= 0:
                 self.fireballs.remove(fireball)
                 
+        # Check for bullets that have hit an alien and remove both
+        collisions = pygame.sprite.groupcollide(self.fireballs, self.aliens, True, True)       
+         
+    def _update_aliens(self, i):
+        """Release alien and update alien positions"""
+        # Release a new alien at a certain rate
+        if i % self.settings.bullet_rate == 0:
+            self._release_alien()
+        self.aliens.update()
+        
+    def _release_alien(self):
+        """Create new alien and add to aliens group"""
+        new_alien = Alien(self)
+        self.aliens.add(new_alien)
+        
     def _update_screen(self):
         """Update the screen"""
         self.screen.blit(self.bg_img, (0, 0))
         self.dragon.draw_dragon()
-        for fireball in self.fireballs.sprites():
-            fireball.draw_fireball()      
-            
+        #for fireball in self.fireballs.sprites():
+           # fireball.draw_fireball()      
+        self.fireballs.draw(self.screen)
+        #for alien in self.aliens.sprites():
+            #alien.draw_alien()
+        self.aliens.draw(self.screen)        
+         
         pygame.display.flip()
                     
 if __name__ == "__main__":

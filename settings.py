@@ -6,6 +6,9 @@ class Settings:
         # Screen settings
         self.screen_width = 1200
         self.screen_height = 800
+
+        # General settings
+        self.bullet_rate = 100
         
         # Dragon settings
         self.dragon_speed = 3.5
@@ -13,3 +16,6 @@ class Settings:
         # Fireball settings
         self.fireball_speed = 1.5
         self.fireballs_allowed = 5
+        
+        # Alien settings
+        self.alien_speed = 0.2
