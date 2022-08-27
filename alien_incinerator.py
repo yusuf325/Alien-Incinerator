@@ -3,6 +3,7 @@ import sys
 import pygame
 
 from settings import Settings
+from game_stats import GameStats
 from dragon import Dragon
 from fireball import Fireball
 from alien import Alien
@@ -15,6 +16,7 @@ class AlienIncinerator:
         pygame.init()
         
         self.settings = Settings()
+        self.stats = GameStats(self)
         
         # Windowed mode
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
@@ -41,9 +43,10 @@ class AlienIncinerator:
         i = 0
         while True:
             self._check_events()
-            self.dragon.update()
-            self._update_fireballs()
-            self._update_aliens(i)
+            if self.stats.game_active:
+                self.dragon.update()
+                self._update_fireballs()
+                self._update_aliens(i)
             self._update_screen()
             i += 1 
             
@@ -97,15 +100,18 @@ class AlienIncinerator:
     def _update_aliens(self, i):
         """Release alien and update alien positions"""
         # Release a new alien at a certain rate
-        if i % self.settings.fireball_rate == 0:
+        if i % self.settings.alien_rate == 0:
             self._release_alien()
         self.aliens.update()
         
         # Remove aliens that have gone off screen
         for alien in self.aliens.copy():
             if alien.rect.top >= self.settings.screen_height:
+                self.stats.dragons_left -= 1
+                if self.stats.dragons_left == 0:
+                    self.stats.game_active = False
                 self.aliens.remove(alien)
-        
+                
         # Removes all aliens and restarts ship
         """if pygame.sprite.spritecollideany(self.dragon, self.aliens):
             self.aliens.empty()
