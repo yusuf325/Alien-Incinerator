@@ -39,4 +39,7 @@ class Dragon:
         """Draw the dragon at its rect"""
         self.screen.blit(self.img, self.rect)        
         
-    
+    def center_dragon(self):
+        """Center the dragon on the screen"""
+        self.rect.midbottom = self.screen_rect.midbottom
+        self.x = float(self.rect.x)

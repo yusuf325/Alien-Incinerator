@@ -4,6 +4,7 @@ import pygame
 
 from settings import Settings
 from game_stats import GameStats
+from button import Button
 from dragon import Dragon
 from fireball import Fireball
 from alien import Alien
@@ -17,7 +18,7 @@ class AlienIncinerator:
         
         self.settings = Settings()
         self.stats = GameStats(self)
-        
+
         # Windowed mode
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         self.screen_rect = self.screen.get_rect()
@@ -37,7 +38,10 @@ class AlienIncinerator:
         # Load and resize background iamge
         self.bg_img = pygame.image.load(r"images\background.jpg")
         self.bg_img = pygame.transform.scale(self.bg_img,(self.settings.screen_width, self.settings.screen_height))
-                
+        
+        # Make play button
+        self.play_button = Button(self, "Play")
+        
     def run_game(self):
         """Start the game loop"""
         i = 0
@@ -59,7 +63,10 @@ class AlienIncinerator:
                 self._check_keydown(event)  
             elif event.type == pygame.KEYUP:
                 self._check_keyup(event)
-                    
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
+                
     def _check_keydown(self, event):
         """Respond to key presses"""
         if event.key == pygame.K_RIGHT:
@@ -77,6 +84,25 @@ class AlienIncinerator:
             self.dragon.moving_right = False
         elif event.key == pygame.K_LEFT:
             self.dragon.moving_left = False
+            
+    def _check_play_button(self, mouse_pos):
+        """Start a new game when the player clicks Play"""
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.stats.game_active:
+            # Reset game statistics
+            self.stats.reset_stats()
+            
+            # Get rid of any remaining aliens and fireballs
+            self.aliens.empty()
+            self.fireballs.empty()
+            
+            # Center dragon 
+            self.dragon.center_dragon()
+            
+            # Hide mouse cursor
+            pygame.mouse.set_visible(False)
+            
+            self.stats.game_active = True
     
     def _shoot_fireball(self):
         """Create new fireball and add to fireballs group"""
@@ -104,15 +130,9 @@ class AlienIncinerator:
             self._release_alien()
         self.aliens.update()
         
-        # Remove aliens that have gone off screen
-        for alien in self.aliens.copy():
-            if alien.rect.top >= self.settings.screen_height:
-                self.stats.dragons_left -= 1
-                if self.stats.dragons_left == 0:
-                    self.stats.game_active = False
-                self.aliens.remove(alien)
+        self._check_aliens_bottom()
                 
-        # Removes all aliens and restarts ship
+        # Removes all aliens and restarts dragon if an alien collides with dragon
         """if pygame.sprite.spritecollideany(self.dragon, self.aliens):
             self.aliens.empty()
             self.dragon = Dragon(self)
@@ -122,12 +142,23 @@ class AlienIncinerator:
         if collider:
             self.aliens.remove(collider)
             print("Ship hit")"""
-        
+    
     def _release_alien(self):
         """Create new alien and add to aliens group"""
         new_alien = Alien(self)
         self.aliens.add(new_alien)
         
+    def _check_aliens_bottom(self):
+        """Remove aliens that have gone off screen and decrements lives left"""
+        for alien in self.aliens.copy():
+            if alien.rect.top >= self.settings.screen_height:
+                self.stats.dragons_left -= 1
+                if self.stats.dragons_left == 0:
+                    self.stats.game_active = False
+                    pygame.mouse.set_visible(True)
+                    print("Game over!")
+                self.aliens.remove(alien)
+                
     def _update_screen(self):
         """Update the screen"""
         self.screen.blit(self.bg_img, (0, 0))
@@ -139,6 +170,10 @@ class AlienIncinerator:
             #alien.draw_alien()
         self.aliens.draw(self.screen)        
          
+        # Draw play button if game is inactive
+        if not self.stats.game_active:
+            self.play_button.draw_button()
+            
         pygame.display.flip()
                     
 if __name__ == "__main__":

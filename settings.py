@@ -8,7 +8,7 @@ class Settings:
         self.screen_height = 800
 
         # General settings
-        self.alien_rate = 1000
+        self.alien_rate = 200
         self.dragon_limit = 3
         
         # Dragon settings
